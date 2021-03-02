@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<a class="element-class" data-toggle="modal" data-target="#modal-id" aria-hidden="true" data-url="{% url 'directory:insurence_create'%}" >+</a>
+{% for insurance in insurances %}
+	<li class="">{{insurance.title}}</li>
+	<span class="li-span">
+		<i class="fa fa-pencil element-class" data-toggle="modal" data-target="#modal-id" aria-hidden="true" data-url="{% url 'directory:insurance_update' pk=insurance.id %}" ></i>&nbsp&nbsp
+		<i class="fa fa-trash element-class" data-toggle="modal" data-target="#modal-id" aria-hidden="true" data-url="{% url 'directory:insurance_delete' pk=insurance.id %}"></i>
+	</span>
+{% endfor %}
+{% endblock %}
+
+{% block modal %}
+<div class="modal fade" id="modal-id" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="modal-content">
+          
+        </div>
+        
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block domready %}
+ $(document).on("click", ".element-class", function() {
+    var url = $(this).data('url')
+    $.ajax({
+            url: url,
+            type: 'GET',
+            data:{url: url},
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseText)
+            },
+            success:function (data) {
+                $('#modal-content').html(data)
+            }
+        })
+  });
+{% endblock %}
